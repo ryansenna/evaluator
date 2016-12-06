@@ -41,6 +41,30 @@ public class Infix {
         return item;
     }
     
+    /**
+     * This method returns the item at the head, without removing it.
+     * 
+     * @return 
+     */ 
+    public String peek(){
+        return queue.get(0);
+    }
+    /**
+     * This method gets the size of the queue.
+     * 
+     * @return
+     */
+    public int size(){
+        return queue.size();
+    }
+    /**
+     * This method gets whether the queue has no items.
+     * 
+     * @return
+     */
+    public boolean isEmpty(){
+        return queue.isEmpty();
+    }
     private void validateNumber(String number){
         for(int i = 0; i < number.length(); i++){
             char c = number.charAt(i);
