@@ -14,11 +14,54 @@ import java.util.List;
  */
 public class Infix {
     private List<String> queue;
-    private String number;
-    private String symbol;
     
     public Infix(){
         super();
         queue = new ArrayList<>();
     }
+    
+    /**
+     * This method will add the number to the tail of the queue.
+     * it returns true if it adds it.
+     * @param number
+     * @return 
+     */
+    public boolean enqueue(String number){
+        validateNumber(number);
+        return queue.add(number);
+    }
+    /**
+     * This method returns the item at the head of the 
+     * queue and removes it from it.
+     * @return 
+     */
+    public String dequeue(){
+        String item = queue.get(0);
+        queue.remove(0);
+        return item;
+    }
+    
+    private void validateNumber(String number){
+        for(int i = 0; i < number.length(); i++){
+            char c = number.charAt(i);
+            if(!isAllowedSymbol(c)){
+                if(!Character.isDigit(c))
+                    throw new IllegalArgumentException("Exception 100: The number especified is not a number.");
+            }
+        }
+    }
+
+    private boolean isAllowedSymbol(char c) {
+        String allowedSymbols = "+-*/()";
+        int count = 0;
+        for(int i = 0; i < allowedSymbols.length(); i++){
+            if(c == allowedSymbols.charAt(i))
+                count++;
+        }
+        if(count == 0){
+            return false;
+        }
+        return true;
+    }
+    
 }
