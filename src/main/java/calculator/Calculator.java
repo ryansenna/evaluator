@@ -14,19 +14,19 @@ import queues.Stack;
  * @author ryan Sena
  */
 public class Calculator {
-   private Queue inf;
+   private Queue infix;
    private Stack post;
    List<String> stackOfSymbols;
    List<String> stackOfNumbers;
    public Calculator(){
        super();
-       inf = new Queue();
+       infix = new Queue();
        post = new Stack();
        
    }
    
    public Calculator(Queue inf){
-       this.inf = inf;
+       this.infix = inf;
        post = new Stack();
    }
    
@@ -38,6 +38,6 @@ public class Calculator {
     * infix Q to postfix
     */
    private void toPostfix(){
-       String 
+       //String 
    }
 }
