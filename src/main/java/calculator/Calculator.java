@@ -5,10 +5,39 @@
  */
 package calculator;
 
+import java.util.List;
+import queues.Queue;
+import queues.Stack;
+
 /**
  *
  * @author ryan Sena
  */
 public class Calculator {
-    
+   private Queue inf;
+   private Stack post;
+   List<String> stackOfSymbols;
+   List<String> stackOfNumbers;
+   public Calculator(){
+       super();
+       inf = new Queue();
+       post = new Stack();
+       
+   }
+   
+   public Calculator(Queue inf){
+       this.inf = inf;
+       post = new Stack();
+   }
+   
+   public Stack getPostfixExpression(){
+       return post;
+   }
+   /**
+    * This method will make the conversion between the received
+    * infix Q to postfix
+    */
+   private void toPostfix(){
+       String 
+   }
 }

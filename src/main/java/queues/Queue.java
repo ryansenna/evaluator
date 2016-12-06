@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @author Ryan Sena
  */
-public class Infix {
+public class Queue {
     private List<String> queue;
     
-    public Infix(){
+    public Queue(){
         super();
         queue = new ArrayList<>();
     }
@@ -65,6 +65,8 @@ public class Infix {
     public boolean isEmpty(){
         return queue.isEmpty();
     }
+    
+    
     private void validateNumber(String number){
         for(int i = 0; i < number.length(); i++){
             char c = number.charAt(i);
