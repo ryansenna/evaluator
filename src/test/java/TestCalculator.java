@@ -45,14 +45,18 @@ public class TestCalculator {
     @Parameterized.Parameters
     public static Collection primeNumbers(){
         return Arrays.asList(new Object[][]{
-            {"2+3*4","234*+"},
-            {"2+3-4","23+4-"},
-            {"(2+3)*4","23+4*"},
-            {"2*(3+4)","234+*"},
-            {"(2+3)*(5-2)","23+52-*"},
-            {"(((((3+5)+8)*7)-8)+9)","35+8+7*8-9+"},
-            // bad infixes
-            {}
+            {"2+3*4","234*+"},// test different precedence operators.
+            {"2+3-4","23+4-"},// test same precedence operators.
+            {"(2+3)*4","23+4*"},// test parenthesis on a lower precedence operator on the beginning.
+            {"2*(3+4)","234+*"},// test parenthesis on a lower precedence operator on the end.
+            {"(2+3)*(5-2)","23+52-*"},// test lower precedence operators in parenthesis separated by a higher precedence operator.
+            {"(((((3+5)+8)*7)-8)+9)","35+8+7*8-9+"},// test nested parenthesis.
+            // test bad infixes
+//            {"",""},
+//            {"",""},
+//            {"",""},
+//            {"",""},
+//            {"",""},
         });
     }
     @Test

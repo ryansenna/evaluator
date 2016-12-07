@@ -6,7 +6,6 @@
 package calculator;
 
 import beans.Operator;
-import java.util.List;
 import queues.Queue;
 import queues.Stack;
 
@@ -28,26 +27,9 @@ public class Calculator {
         postfix = new Queue();
         stack = new Stack();
     }
-
-    private boolean isElementLeftParenthesis(String element) {
-        return element.contains("(");
-    }
-
-    private boolean isElementRightParenthesis(String element) {
-        return element.contains(")");
-    }
-
-    private void setInfix(Queue inf) {
-        if (!validateInfix(inf)) {
-            throw new IllegalArgumentException("Error 200: Queue is not valid");
-        }
-        this.infix = inf;
-    }
-
     public Queue getPostfixExpression() {
         return postfix;
     }
-
     /**
      * This method will make the conversion between the received infix Q to
      * postfix
@@ -91,8 +73,24 @@ public class Calculator {
         while (!stack.isEmpty()) {
             postfix.enqueue(stack.pop().getElement());
         }
-
+        
     }
+
+    private boolean isElementLeftParenthesis(String element) {
+        return element.contains("(");
+    }
+
+    private boolean isElementRightParenthesis(String element) {
+        return element.contains(")");
+    }
+
+    private void setInfix(Queue inf) {
+        if (!validateInfix(inf)) {
+            throw new IllegalArgumentException("Error 200: Queue is not valid");
+        }
+        this.infix = inf;
+    }
+
 
     private boolean isOperandOnBothEnds(Queue inf) {
         String operand1 = inf.peek();
@@ -142,8 +140,10 @@ public class Calculator {
         if (!isQNumericOrSymbols(inf)) {
             return false;
         }
+        if(!parenthesisRules(inf))
+            return false;
         countNumOfParenthesis(inf);
-        if(totalParCount%2 == 1){
+        if (totalParCount % 2 == 1) {
             return false;
         }
         return isOperandOnBothEnds(inf);
@@ -188,5 +188,82 @@ public class Calculator {
             }
         }
         totalParCount = countLeftParenthesis + countRightParenthesis;
+    }
+
+    private boolean parenthesisRules(Queue inf) {
+        // the right of a "(" must be either another "(" or a number.
+        for (int i = 0; i < inf.size(); i++) {
+            String element = inf.get(i);
+            String nextElement = null;
+            String beforeElement = null;
+            try {
+                nextElement = inf.get(i + 1);
+            } catch (Exception e) {
+                // means that there is no next element.
+            }
+            try {
+                beforeElement = inf.get(i - 1);
+            } catch (Exception e) {
+                // means that there is no before element.
+            }
+            if (isElementLeftParenthesis(element)) {// check if the current is a left parenthesis
+                if (nextElement != null) {
+                    if (!isElementLeftParenthesis(nextElement) && !isElementNumeric(nextElement))// if it is not a left parenthesis.
+                    {
+                        return false;
+                    }
+                }
+                if (beforeElement != null) {
+                    if (!isElementSymbol(beforeElement)
+                            && !isElementLeftParenthesis(beforeElement))// check if the element before is a symbol.
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (isElementRightParenthesis(element)) {
+                if (nextElement != null) {
+                    if (!isElementRightParenthesis(nextElement) && !isElementSymbol(nextElement)) {
+                        return false;
+                    }
+                }
+                if (beforeElement != null) {
+                    if (!isElementNumeric(beforeElement) && !isElementRightParenthesis(beforeElement)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+    private boolean operatorRules(Queue inf){
+        String currentElement = null;
+        String nextElement = null;
+        String beforeElement = null;
+        for(int i = 0; i < inf.size(); i++){
+            currentElement = inf.get(i);
+            try{
+                nextElement = inf.get(i+1);
+            }catch(Exception e){
+                // means that there is no next element.
+            }
+            try{
+                beforeElement = inf.get(i-1);
+            }catch(Exception e){
+                // means that there is no before element.
+            }
+            if(isElementOperator(currentElement)){
+                if(nextElement != null){
+                    if(!isElementNumeric(nextElement) && !isElementLeftParenthesis(nextElement))
+                        return false;
+                }
+                if(beforeElement != null){
+                    if(!isElementNumeric(beforeElement) && !isElementRightParenthesis(beforeElement))
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 }
