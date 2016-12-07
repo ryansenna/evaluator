@@ -26,6 +26,14 @@ public class Calculator {
         stack = new Stack();
     }
 
+    private boolean isElementLeftParenthesis(String element) {
+        return element.contains("(");
+    }
+
+    private boolean isElementRightParenthesis(String element) {
+        return element.contains(")");
+    }
+
     private void setInfix(Queue inf) {
         if (!validateInfix(inf)) {
             throw new IllegalArgumentException("Error 200: Queue is not valid");
@@ -42,46 +50,65 @@ public class Calculator {
      * postfix
      */
     public void toPostfix() {
-        while(!infix.isEmpty()){
+        int counter = 0;
+        while (!infix.isEmpty()) {
             String element = infix.dequeue();
-            if(isElementNumeric(element))
+            if (isElementNumeric(element)) {
                 postfix.enqueue(element);
-            if(isElementSymbol(element))
-            {
-                Operator op = this.toOperator(element);
-                Operator returnedOP = stack.push(op);
-                if(returnedOP != null){
-                    postfix.enqueue(returnedOP.getElement());
+            }
+            if (isElementSymbol(element)) {
+                if (isElementLeftParenthesis(element)) {
+                    counter++;
+                }
+                if (isElementRightParenthesis(element)) {
+                    counter++;
+                }
+                if (isElementOperator(element)) {
+                    Operator op = this.toOperator(element);
+                    if(counter == 2){
+                        Operator topOperator = stack.peek();
+                        topOperator.setPrecedenceValue(3);
+                        counter = 0;
+                    }
+                    Operator returnedOP = stack.push(op);
+                    if (returnedOP != null) {
+                        postfix.enqueue(returnedOP.getElement());
+                    }
                 }
             }
         }
-        while(!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             postfix.enqueue(stack.pop().getElement());
         }
-        
+
     }
+    
 
     private boolean isOperandOnBothEnds(Queue inf) {
         String operand1 = inf.peek();
         String operand2 = inf.lastIn();
         char startSymbol = '(';
-        char endSymbol  = ')';
-        
+        char endSymbol = ')';
+
         if (!Character.isDigit(operand1.charAt(0))) {
-            if(operand1.charAt(0) != startSymbol)
+            if (operand1.charAt(0) != startSymbol) {
                 return false;
+            }
         }
         if (!Character.isDigit(operand2.charAt(0))) {
-            if(operand2.charAt(0) != endSymbol)
+            if (operand2.charAt(0) != endSymbol) {
                 return false;
+            }
         }
 
         return true;
     }
+
     /**
      * checks if the q contains the right symbols or numbers.
-     * @return 
-     */ 
+     *
+     * @return
+     */
     private boolean isQNumericOrSymbols(Queue inf) {
         String element = "";
         for (int i = 0; i < inf.size(); i++) {
@@ -97,8 +124,9 @@ public class Calculator {
         }
         return true;
     }
+
     /**
-     * 
+     *
      */
     private boolean validateInfix(Queue inf) {
         if (!isQNumericOrSymbols(inf)) {
@@ -112,21 +140,27 @@ public class Calculator {
         return symbols.contains(element);
     }
 
+    private boolean isElementOperator(String element) {
+        String symbols = "+-*/";
+        return symbols.contains(element);
+    }
+
     private boolean isElementNumeric(String element) {
         String numbers = "1234567890";
         return numbers.contains(element);
     }
-    
-    private Operator toOperator(String element){
+
+    private Operator toOperator(String element) {
         String parenthesis = "()";
         String addsub = "+-";
         String multidiv = "*/";
-        if(parenthesis.contains(element))
-            return new Operator(3,element);
-        else if(multidiv.contains(element))
-            return new Operator(2,element);
-        else 
-            return new Operator(1,element);
-            
+        if (parenthesis.contains(element)) {
+            return new Operator(3, element);
+        } else if (multidiv.contains(element)) {
+            return new Operator(2, element);
+        } else {
+            return new Operator(1, element);
+        }
+
     }
 }

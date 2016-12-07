@@ -21,12 +21,14 @@ public class TestCalculator {
     public void testToPostfix(){
         Queue infix = new Queue();
         Boolean b = false;
+        infix.enqueue("(");
         infix.enqueue("2");
         infix.enqueue("+");
         infix.enqueue("3");
+        infix.enqueue(")");
         infix.enqueue("*");
         infix.enqueue("4");
-        String postToCompare = "234*+";
+        String postToCompare = "23+4*";
         Calculator c = new Calculator(infix);
         c.toPostfix();
         Queue postfix = c.getPostfixExpression();
