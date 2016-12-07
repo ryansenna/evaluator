@@ -5,6 +5,7 @@
  */
 package queues;
 
+import beans.Operator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @author Ryan Sena
  */
 public class Stack {
-    private List<String> stack;
+    private List<Operator> stack;
     
     public Stack(){
         super();
@@ -24,7 +25,7 @@ public class Stack {
      * Returns the element on the top of the stack, but does not remove it.
      * @return 
      */
-    public String peek(){
+    public Operator peek(){
         return stack.get(stack.size()-1);
     }
     
@@ -33,8 +34,8 @@ public class Stack {
      * removing it in the process.
      * @return 
      */
-    public String pop(){
-        String item = stack.get(stack.size()-1);
+    public Operator pop(){
+        Operator item = stack.get(stack.size()-1);
         stack.remove(stack.size()-1);
         return item;
     }
@@ -44,10 +45,24 @@ public class Stack {
      * 
      * @return 
      */ 
-    public String push(String element){
-        if(stack.add(element))
-            return element;
-        return null;
+    public Operator push(Operator element){
+        Operator elementToReturn = null;
+        if(!stack.isEmpty())
+        {
+            Operator elementInStack = stack.get(0);
+            if(element.getPrecedenceValue() > elementInStack.getPrecedenceValue()){
+                stack.add(element);
+                elementToReturn = null;
+            }
+            else{
+                stack.remove(elementInStack);
+                stack.add(element);  
+                elementToReturn = elementInStack;
+            }
+        }else{
+            stack.add(element);
+        }
+        return elementToReturn;
     }
     /**
      * This method gets the size of the queue.

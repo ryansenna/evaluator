@@ -27,7 +27,6 @@ public class Queue {
      * @return 
      */
     public boolean enqueue(String number){
-        validateNumber(number);
         return queue.add(number);
     }
     /**
@@ -48,6 +47,18 @@ public class Queue {
      */ 
     public String peek(){
         return queue.get(0);
+    }
+   /**
+     * This method returns the item at the tail, without removing it.
+     * 
+     * @return 
+     */ 
+    public String lastIn(){
+        return queue.get(queue.size()-1);
+    }
+    
+    public String get(int element){
+        return queue.get(element);
     }
     /**
      * This method gets the size of the queue.
@@ -88,6 +99,14 @@ public class Queue {
             return false;
         }
         return true;
+    }
+    
+    public String toString(){
+        String toReturn = "";
+        for(int i = 0; i < queue.size(); i++){
+            toReturn += queue.get(i);
+        }
+        return toReturn;
     }
     
 }
