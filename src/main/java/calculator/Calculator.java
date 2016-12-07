@@ -27,9 +27,11 @@ public class Calculator {
         postfix = new Queue();
         stack = new Stack();
     }
+
     public Queue getPostfixExpression() {
         return postfix;
     }
+
     /**
      * This method will make the conversion between the received infix Q to
      * postfix
@@ -73,7 +75,7 @@ public class Calculator {
         while (!stack.isEmpty()) {
             postfix.enqueue(stack.pop().getElement());
         }
-        
+
     }
 
     private boolean isElementLeftParenthesis(String element) {
@@ -90,7 +92,6 @@ public class Calculator {
         }
         this.infix = inf;
     }
-
 
     private boolean isOperandOnBothEnds(Queue inf) {
         String operand1 = inf.peek();
@@ -140,8 +141,12 @@ public class Calculator {
         if (!isQNumericOrSymbols(inf)) {
             return false;
         }
-        if(!parenthesisRules(inf))
+        if (!parenthesisRules(inf)) {
             return false;
+        }
+        if(!operatorRules(inf)){
+            return false;
+        }
         countNumOfParenthesis(inf);
         if (totalParCount % 2 == 1) {
             return false;
@@ -208,59 +213,72 @@ public class Calculator {
             }
             if (isElementLeftParenthesis(element)) {// check if the current is a left parenthesis
                 if (nextElement != null) {
-                    if (!isElementLeftParenthesis(nextElement) && !isElementNumeric(nextElement))// if it is not a left parenthesis.
-                    {
-                        return false;
+                    if (!isElementLeftParenthesis(nextElement)) {
+                        if (!isElementNumeric(nextElement))// if it is not a left parenthesis.
+                        {
+                            return false;
+                        }
                     }
                 }
                 if (beforeElement != null) {
-                    if (!isElementSymbol(beforeElement)
-                            && !isElementLeftParenthesis(beforeElement))// check if the element before is a symbol.
-                    {
-                        return false;
+                    if (!isElementOperator(beforeElement)) {
+                        if (!isElementLeftParenthesis(beforeElement))// check if the element before is a symbol.
+                        {
+                            return false;
+                        }
                     }
                 }
             }
             if (isElementRightParenthesis(element)) {
                 if (nextElement != null) {
-                    if (!isElementRightParenthesis(nextElement) && !isElementSymbol(nextElement)) {
-                        return false;
+                    if (!isElementRightParenthesis(nextElement)) {
+                        if (!isElementOperator(nextElement)) {
+                            return false;
+                        }
                     }
                 }
                 if (beforeElement != null) {
-                    if (!isElementNumeric(beforeElement) && !isElementRightParenthesis(beforeElement)) {
-                        return false;
+                    if (!isElementNumeric(beforeElement)) {
+                        if (!isElementRightParenthesis(beforeElement)) {
+                            return false;
+                        }
                     }
                 }
             }
         }
         return true;
     }
-    
-    private boolean operatorRules(Queue inf){
+
+    private boolean operatorRules(Queue inf) {
         String currentElement = null;
         String nextElement = null;
         String beforeElement = null;
-        for(int i = 0; i < inf.size(); i++){
+        for (int i = 0; i < inf.size(); i++) {
             currentElement = inf.get(i);
-            try{
-                nextElement = inf.get(i+1);
-            }catch(Exception e){
+            try {
+                nextElement = inf.get(i + 1);
+            } catch (Exception e) {
                 // means that there is no next element.
             }
-            try{
-                beforeElement = inf.get(i-1);
-            }catch(Exception e){
+            try {
+                beforeElement = inf.get(i - 1);
+            } catch (Exception e) {
                 // means that there is no before element.
             }
-            if(isElementOperator(currentElement)){
-                if(nextElement != null){
-                    if(!isElementNumeric(nextElement) && !isElementLeftParenthesis(nextElement))
-                        return false;
+            if (isElementOperator(currentElement)) {
+                if (nextElement != null) {
+                    if (!isElementNumeric(nextElement)) {
+                        if (!isElementLeftParenthesis(nextElement)) {
+                            return false;
+                        }
+                    }
                 }
-                if(beforeElement != null){
-                    if(!isElementNumeric(beforeElement) && !isElementRightParenthesis(beforeElement))
-                        return false;
+                if (beforeElement != null) {
+                    if (!isElementNumeric(beforeElement)) {
+                        if (!isElementRightParenthesis(beforeElement)) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
