@@ -38,10 +38,9 @@ public class Calculator {
     }
 
     private void setInfix(Queue inf) {
-        //if (!validateInfix(inf)) {
-        //    throw new IllegalArgumentException("Error 200: Queue is not valid");
-        //}
-        countNumOfParenthesis(inf);
+        if (!validateInfix(inf)) {
+            throw new IllegalArgumentException("Error 200: Queue is not valid");
+        }
         this.infix = inf;
     }
 
@@ -54,18 +53,24 @@ public class Calculator {
      * postfix
      */
     public void toPostfix() {
-        int precedenceValue = countLeftParenthesis;
-        int countClosedExpressions = 0;
+        int precedenceValue = 50 + countLeftParenthesis;
+        int countExpressions = 0;
         while (!infix.isEmpty()) {// loop until the Q is empty.
             String element = infix.dequeue();// dequeue the first element.
             if (isElementNumeric(element)) {// check if it is numeric
                 postfix.enqueue(element);// if it is numeric, automatically enqueue to postfix.
-            }
-            else {
+            } else {
+                if (isElementLeftParenthesis(element)) {
+                    countExpressions++;
+                }
+                if (isElementRightParenthesis(element)) {
+                    countExpressions--;
+                }
+
                 if (isElementOperator(element)) {// check if it is an operator.
                     Operator operatorToAdd = toOperator(element);// get what operator is.
-                    if (precedenceValue != 0) {
-                        operatorToAdd.setPrecedenceValue(precedenceValue);// 
+                    if (countExpressions != 0) {
+                        operatorToAdd.setPrecedenceValue(precedenceValue);
                         precedenceValue--;
                     }
                     if (!stack.isEmpty()) {
@@ -135,6 +140,10 @@ public class Calculator {
      */
     private boolean validateInfix(Queue inf) {
         if (!isQNumericOrSymbols(inf)) {
+            return false;
+        }
+        countNumOfParenthesis(inf);
+        if(totalParCount%2 == 1){
             return false;
         }
         return isOperandOnBothEnds(inf);
