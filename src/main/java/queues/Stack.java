@@ -7,7 +7,9 @@ package queues;
 
 import beans.Operator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import strategy.OperatorCompare;
 
 /**
  *
@@ -35,6 +37,7 @@ public class Stack {
      * @return 
      */
     public Operator pop(){
+        //this.sort();
         Operator item = stack.get(stack.size()-1);
         stack.remove(stack.size()-1);
         return item;
@@ -46,23 +49,8 @@ public class Stack {
      * @return 
      */ 
     public Operator push(Operator element){
-        Operator elementToReturn = null;
-        if(!stack.isEmpty())
-        {
-            Operator elementInStack = stack.get(0);
-            if(element.getPrecedenceValue() > elementInStack.getPrecedenceValue()){
-                stack.add(element);
-                elementToReturn = null;
-            }
-            else{
-                stack.remove(elementInStack);
-                stack.add(element);  
-                elementToReturn = elementInStack;
-            }
-        }else{
-            stack.add(element);
-        }
-        return elementToReturn;
+        stack.add(element);
+        return element;
     }
     /**
      * This method gets the size of the queue.
@@ -88,5 +76,9 @@ public class Stack {
      */
     public int search(String element){
         return stack.indexOf(element);
+    }
+
+    public void sort() {
+        Collections.sort(stack, new OperatorCompare());
     }
 }

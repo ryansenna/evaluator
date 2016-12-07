@@ -9,7 +9,7 @@ package beans;
  *
  * @author 1333612
  */
-public class Operator {
+public class Operator implements Comparable<Operator>{
     private int precedenceValue;
     private String element;
     
@@ -36,6 +36,21 @@ public class Operator {
 
     public void setElement(String element) {
         this.element = element;
+    }
+
+    @Override
+    public int compareTo(Operator o) {
+        final int BEFORE = -1;
+        final int EQUAL = 0;
+        final int AFTER = 1;
+        
+        if(this == o)
+            return EQUAL;
+        if(this.getPrecedenceValue() < o.getPrecedenceValue())
+            return BEFORE;
+        if(this.getPrecedenceValue() > o.getPrecedenceValue())
+            return AFTER;
+        return EQUAL;
     }
  
     

@@ -19,6 +19,9 @@ public class Calculator {
     private Queue infix;
     private Queue postfix;
     private Stack stack;
+    int countLeftParenthesis = 0;
+    int countRightParenthesis = 0;
+    int totalParCount = 0;
 
     public Calculator(Queue inf) {
         setInfix(inf);
@@ -35,9 +38,10 @@ public class Calculator {
     }
 
     private void setInfix(Queue inf) {
-        if (!validateInfix(inf)) {
-            throw new IllegalArgumentException("Error 200: Queue is not valid");
-        }
+        //if (!validateInfix(inf)) {
+        //    throw new IllegalArgumentException("Error 200: Queue is not valid");
+        //}
+        countNumOfParenthesis(inf);
         this.infix = inf;
     }
 
@@ -50,29 +54,30 @@ public class Calculator {
      * postfix
      */
     public void toPostfix() {
-        int counter = 0;
+        int precedenceValue = countLeftParenthesis;
         while (!infix.isEmpty()) {
             String element = infix.dequeue();
             if (isElementNumeric(element)) {
                 postfix.enqueue(element);
             }
             if (isElementSymbol(element)) {
-                if (isElementLeftParenthesis(element)) {
-                    counter++;
-                }
-                if (isElementRightParenthesis(element)) {
-                    counter++;
-                }
                 if (isElementOperator(element)) {
-                    Operator op = this.toOperator(element);
-                    if(counter == 2){
-                        Operator topOperator = stack.peek();
-                        topOperator.setPrecedenceValue(3);
-                        counter = 0;
+                    Operator operatorToAdd = toOperator(element);
+                    if (countLeftParenthesis != 0) {
+                        operatorToAdd.setPrecedenceValue(precedenceValue);
+                        precedenceValue--;
                     }
-                    Operator returnedOP = stack.push(op);
-                    if (returnedOP != null) {
-                        postfix.enqueue(returnedOP.getElement());
+                    if (!stack.isEmpty()) {
+                        Operator operatorInStack = stack.peek();
+                        if (operatorToAdd.compareTo(operatorInStack) > 0) {
+                            stack.push(operatorToAdd);
+                        } else {
+                            Operator returnedOp = stack.pop();
+                            postfix.enqueue(returnedOp.getElement());
+                            stack.push(operatorToAdd);
+                        }
+                    } else {
+                        stack.push(operatorToAdd);
                     }
                 }
             }
@@ -82,7 +87,6 @@ public class Calculator {
         }
 
     }
-    
 
     private boolean isOperandOnBothEnds(Queue inf) {
         String operand1 = inf.peek();
@@ -162,5 +166,17 @@ public class Calculator {
             return new Operator(1, element);
         }
 
+    }
+
+    private void countNumOfParenthesis(Queue inf) {
+        for (int i = 0; i < inf.size(); i++) {
+            if (isElementLeftParenthesis(inf.get(i))) {
+                countLeftParenthesis++;
+            }
+            if (isElementRightParenthesis(inf.get(i))) {
+                countRightParenthesis++;
+            }
+        }
+        totalParCount = countLeftParenthesis + countRightParenthesis;
     }
 }
