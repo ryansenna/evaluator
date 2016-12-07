@@ -55,16 +55,17 @@ public class Calculator {
      */
     public void toPostfix() {
         int precedenceValue = countLeftParenthesis;
-        while (!infix.isEmpty()) {
-            String element = infix.dequeue();
-            if (isElementNumeric(element)) {
-                postfix.enqueue(element);
+        int countClosedExpressions = 0;
+        while (!infix.isEmpty()) {// loop until the Q is empty.
+            String element = infix.dequeue();// dequeue the first element.
+            if (isElementNumeric(element)) {// check if it is numeric
+                postfix.enqueue(element);// if it is numeric, automatically enqueue to postfix.
             }
-            if (isElementSymbol(element)) {
-                if (isElementOperator(element)) {
-                    Operator operatorToAdd = toOperator(element);
-                    if (countLeftParenthesis != 0) {
-                        operatorToAdd.setPrecedenceValue(precedenceValue);
+            else {
+                if (isElementOperator(element)) {// check if it is an operator.
+                    Operator operatorToAdd = toOperator(element);// get what operator is.
+                    if (precedenceValue != 0) {
+                        operatorToAdd.setPrecedenceValue(precedenceValue);// 
                         precedenceValue--;
                     }
                     if (!stack.isEmpty()) {

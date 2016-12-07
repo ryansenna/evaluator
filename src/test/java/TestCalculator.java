@@ -45,8 +45,10 @@ public class TestCalculator {
     @Parameterized.Parameters
     public static Collection primeNumbers(){
         return Arrays.asList(new Object[][]{
-            {"2+3*4","234*+"},
-            {"(((((3+5)+8)*7)-8)+9)","35+8+7*8-9+"}
+            //{"2+3*4","234*+"},
+            //{"(2+3)*4","23+4*"},
+            {"(2+3)*(5-2)","23+52-*"}
+            //{"(((((3+5)+8)*7)-8)+9)","35+8+7*8-9+"}
         });
     }
     @Test
