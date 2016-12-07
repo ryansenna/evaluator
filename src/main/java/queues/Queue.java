@@ -109,4 +109,13 @@ public class Queue {
         return toReturn;
     }
     
+    public Queue toQueue(String something){
+        Queue q = new Queue();
+        
+        for(int i =0; i < something.length(); i++){
+            q.enqueue(something.charAt(i)+"");
+        }
+        return q;
+    }
+    
 }
