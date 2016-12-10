@@ -5,29 +5,26 @@
  */
 package queues;
 
-import beans.Operator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import strategy.OperatorCompare;
 
 /**
  *
  * @author Ryan Sena
  */
-public class Stack {
-    private List<Operator> stack;
+public class Stack<T> {
+    private List<T> stack;
     
     public Stack(){
         super();
-        stack = new ArrayList<>();
+        stack = new ArrayList<T>();
     }
     
    /**
      * Returns the element on the top of the stack, but does not remove it.
      * @return 
      */
-    public Operator peek(){
+    public T peek(){
         return stack.get(stack.size()-1);
     }
     
@@ -36,9 +33,9 @@ public class Stack {
      * removing it in the process.
      * @return 
      */
-    public Operator pop(){
+    public T pop(){
         //this.sort();
-        Operator item = stack.get(stack.size()-1);
+        T item = stack.get(stack.size()-1);
         stack.remove(stack.size()-1);
         return item;
     }
@@ -48,7 +45,7 @@ public class Stack {
      * 
      * @return 
      */ 
-    public Operator push(Operator element){
+    public T push(T element){
         stack.add(element);
         return element;
     }
@@ -78,7 +75,7 @@ public class Stack {
         return stack.indexOf(element);
     }
 
-    public void sort() {
-        Collections.sort(stack, new OperatorCompare());
-    }
+//    public void sort() {
+//        Collections.sort(stack, new OperatorCompare());
+//    }
 }

@@ -1,7 +1,6 @@
 
+import beans.Operable;
 import calculator.Calculator;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 import queues.Queue;
 
 import java.util.Arrays;
@@ -11,16 +10,10 @@ import org.junit.Test;
 import org.junit.Before;
 
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import org.slf4j.LoggerFactory;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author 1333612
@@ -29,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class TestCalculator {
 
     private String inputQ;
-    private String expectedResult;
+    private Double expectedResult;
     private Queue queue;
     private final org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -38,7 +31,7 @@ public class TestCalculator {
         queue = new Queue();
     }
 
-    public TestCalculator(String inputQ, String expectedResult) {
+    public TestCalculator(String inputQ, Double expectedResult) {
         this.inputQ = inputQ;
         this.expectedResult = expectedResult;
     }
@@ -46,34 +39,49 @@ public class TestCalculator {
     @Parameterized.Parameters
     public static Collection goodInfixes() {
         return Arrays.asList(new Object[][]{
-            {"2+3*4", "234*+"},// test different precedence operators.
-            {"2+3-4", "23+4-"},// test same precedence operators.
-            {"(2+3)*4", "23+4*"},// test parenthesis on a lower precedence operator on the beginning.
-            {"2*(3+4)", "234+*"},// test parenthesis on a lower precedence operator on the end.
-            {"(2+3)*(5-2)", "23+52-*"},// test lower precedence operators in parenthesis separated by a higher precedence operator.
-            {"(((((3+5)+8)*7)-8)+9)", "35+8+7*8-9+"},// test nested parenthesis.
-            // test bad infixes
-            {"(2+3(2+3))", "null"},
-            {"+3", "null"},
-            {"(2+3)(2+3)", "null"},
-            {"(2+3)(*)", "null"},
-            {"2++3", "null"}
+            {"2+2",4.0},
+            {"3*4",12.0},
+            {"2+3*4", 14.0},
+            {"2+3-4", 1.0},
+            {"(2+3)*4", 20.0},
+            {"2*(3+4)", 14.0},
+            {"(2+3)*(5-2)", 15.0},
+            {"(((((3+5)+8)*7)-8)+9)", 113.0},
+            {"5/0",0.0},
+//          test bad infixes
+            {"(2+3(2+3))", 0.0},
+            {"+3", 0.0},
+            {"(2+3)(2+3)", 0.0},
+            {"(2+3)(*)",0.0},
+            {"2++3", 0.0},
+//          more testing
+            {"5/2*7+8*8-9",73.0},
+            {"2+4*3/3", 6.0},
+            {"52+(1+2)*4-3", 61.0},
+            {"52+((1+2)*4)-3",61.0},
+            {"(52+1+2)*4-3", 217.0},
+            {"123.60/25.7", 5.0},
+            {"123.60/25.7+3.45",8.0},
+            {"123.60*(28.7+3.45)", 3974.0},
+            {"(516.46-215.68)/(123.60+28.69)",2.0},
+            {"(10*7)+(9-5)*3+4",86.0},
+            {"(10.536*58.52026)+(9421.48745-361.251)*1457.475+7510",13213195.0}
         });
     }
 
     @Test
     public void testToPostfix() {
         log.debug("Parameterized Queue is : " + inputQ);
-        Queue infix = queue.toQueue(inputQ);
+        Queue<Operable> infix = queue.toQueue(inputQ);
         Calculator c = null;
-        String postfixString = "null";
+        Double ans = 0.0;
         try {
             c = new Calculator(infix);
-            c.toPostfix();
-            postfixString = c.getPostfixExpression().toString();
+            ans = c.getAnswer();
+            ans = (double)Math.round(ans);
         } catch (IllegalArgumentException iae) {
-            // means that the infix was invalid.
+            log.error(iae.getMessage());
         }
-        assertEquals(expectedResult, postfixString);
+        assertEquals(expectedResult,ans);
     }
 }

@@ -9,7 +9,7 @@ package beans;
  *
  * @author 1333612
  */
-public class Operator implements Comparable<Operator>{
+public class Operator implements Comparable<Operator>, Operable{
     private int precedenceValue;
     private String element;
     
@@ -24,6 +24,31 @@ public class Operator implements Comparable<Operator>{
 
     public int getPrecedenceValue() {
         return precedenceValue;
+    }
+
+    @Override
+    public boolean isLeftParenthesis() {
+        return false;
+    }
+
+    @Override
+    public boolean isOperand() {
+        return false;
+    }
+
+    @Override
+    public boolean isOperator() {
+        return true;
+    }
+
+    @Override
+    public boolean isRightParenthesis() {
+        return false;
+    }
+
+    @Override
+    public boolean isSymbol() {
+        return true;
     }
 
     public void setPrecedenceValue(int precedenceValue) {
